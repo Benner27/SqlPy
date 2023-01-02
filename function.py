@@ -138,7 +138,7 @@ class IdealFunction(Function):
         """ Explains accepted tolerance regarding the regression for it to be considered as classification.
         Rather than setting a direct tolerance, issuing a tolerance_factor is advised.
         :return: the tolerance """
-        self._tolerance = self.tolerance_factor * self.tremendous_deviation
+        self._tolerance = self.tolerance_factor * self.greatest_deviation
         return self._tolerance
 
     @tolerance.setter

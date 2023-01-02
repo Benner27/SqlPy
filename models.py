@@ -6,7 +6,7 @@ from db import Base
 class TrainingData(Base):
     """Database model for training data"""
 
-    __table_name__ = 'training_data'
+    __tablename__ = 'training_data'
     id = Column(Integer(), primary_key=True)
     x = Column(Float(), nullable=False)
     y1 = Column(Float(), nullable=False)
@@ -20,7 +20,7 @@ class TrainingData(Base):
 
 class IdeaFunction(Base):
     """ Database model for ideal functions """
-    __table_name__ = 'ideal_functions'
+    __tablename__ = 'ideal_functions'
     id = Column(Integer(), primary_key=True)
     x = Column(Float(), nullable=False)
     y1 = Column(Float(), nullable=False)
@@ -80,7 +80,7 @@ class IdeaFunction(Base):
 
 class Mapping(Base):
     """ Database model for mappings """
-    __table_name__ = 'mappings'
+    __tablename__ = 'mappings'
     id = Column("id", Integer(), primary_key=True)
     x = Column("x (test_func)", Float(), nullable=False)
     y = Column("y (test_func)", Float(), nullable=False)

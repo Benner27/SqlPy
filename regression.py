@@ -16,7 +16,7 @@ def minimise_loss(training_function, loss_function, list_of_candidate_functions)
             function_with_least_error = function
 
     ideal_function = IdealFunction(function=function_with_least_error, training_function=training_function,
-                                   least_error=error)
+                                   error=error)
     return ideal_function
 
 
@@ -30,13 +30,13 @@ def find_classification(point, ideal_functions):
 
     for ideal_function in ideal_functions:
         try:
-            encounter_y_in_classification = ideal_function.encounter_y_based_on_x(point["x"])
+            locate_y_in_classification = ideal_function.locate_y_based_on_x(point["x"])
         except IndexError:
             print("Classification function does not represent this point")
             raise IndexError
 
         # Perceives absolute distance utilization
-        distance = abs(encounter_y_in_classification - point["y"])
+        distance = abs(locate_y_in_classification - point["y"])
 
         # Operates several classifications to return the least distance
         if abs(distance < ideal_function.tolerance):

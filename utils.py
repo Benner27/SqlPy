@@ -47,8 +47,8 @@ class Utils:
                 delta_y = -1
 
             # Alternative dictionary is established for stocking the mapping data
-            new_mapping = {"x": point["x"], "y": point["y"], "delta": delta_y,
-                           "no_of_ideal_func": classification_name}
+            current_mapping = {"x": point["x"], "y": point["y"], "delta": delta_y,
+                               "no_of_ideal_func": classification_name}
 
             obj = Mapping(**current_mapping)
             execute_map.append(obj)
@@ -72,7 +72,7 @@ class DBUtils:
         :db_model: Objects are retrieved from model and kept in database. """
         data = Utils.read(csv_file, db_model)
         print(f"Found {len(data)} columns in {csv_file}")
-        time.snooze(1)
+        time.sleep(1)
 
         DBUtils.load_into_db(data)
 

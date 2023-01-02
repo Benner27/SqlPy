@@ -75,12 +75,12 @@ def plot_classification(point, ideal_function):
         source = ColumnDataSource(classification_function_dataframe.reset_index())
 
         band = Band(base='x', lower='lower', upper='upper', source=source, level='underlay',
-                    fill_alpha=0.3, line_width=1, line_color='green', fill_color="green")
+                    fill_alpha=0.3, line_width=1, line_color='yellow', fill_color="yellow")
 
         # Increases band layout
         p.add_layout(band)
 
         # Transfers points
-        p.scatter([point["x"]], [round(point["y"], 4)], fill_color="red", legend_label="Test point", size=8)
+        p.scatter([point["x"]], [round(point["y"], 4)], fill_color="blue", legend_label="Test point", size=7)
 
         return p
