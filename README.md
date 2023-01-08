@@ -1,27 +1,18 @@
-# SqlPy
-Data Sci Database Work
+# Assignment Py
+Algorithm of the Task
 
-I. Establishing the absolute fitting ideal function
+The core objective of this project, is to find the best fitting function for a given dataset by comparing the performance of different candidate functions using a loss function such as mean squared error (MSE). MSE is calculated by taking the average of the squares of the differences between the predicted values (from the candidate function) and the true values (from the training dataset). The function with the lowest MSE will be selected as the best fitting function.
 
-Begin by choosing the most appropriate ideal training function amongst 50 values provided in .CSV file (with x- and y- values). In our case, one with the lowest/mean squared error which is the average set of errors in relation to the training function.
-Every ideal function to be discovered requires 4 different training functions.
-This in essence is a variation of the “Mean squared deviation ” and is a popular loss function towards models are optimised.
-Squared Error is when the deviation is squared (which eliminates negative values for differences and ensure positive results) and summed up. One quality includes a strong influence on huge deviations.
-Each training function is examined point by point and the deviation of the y- value per ideal function value calculated. 
-This is applied on every value function, such that the function with the lowest Squared Error becomes the ideal function, hence four ideal functions.
+The results of this analysis will be stored in a SQLite database, along with the training data and any additional relevant information. We will use the SQLite3 module in Python to connect to the database and execute SQL commands to create tables and insert data. The pandas library will be used to read in the data from the CSV file and write it to the SQLite database using the 'to_sql' method.
 
-II: Data storage using SQLite
- 
-Data should be computed, enlisted into a SQLite database and three databases have to be created, one that reflects the training data set, 
-another that simulates the ideal functions candidate data set and lastly, one that stocks the classifications and the deviation on to the ideal functions. Furthermore, if no classification is determined and the deviation cannot be catered for. 
-On the occurrence of no classification, the program documents (-) within the “No of ideal function” column and (-1) inside the “Delta Y (test function)” column.
+To visualize the data and results, we will use Panda's 'read_sql' method to retrieve the data from the SQLite database and then use Bokeh and SQLAlchemy to create plots and visualizations.
+The implementation of exception handling in the code to handle any unexpected errors that may occur. This can be done using try-except blocks to catch specific exceptions or using a generic except block to catch any exception.
 
-III. Alternative requirements
+Finally, unit tests will be written using a testing framework like PyTest to ensure that our code is working correctly. These tests will consist of functions that test specific aspects of the code, and these tests will be run to confirm the correctness of the code.
 
-We are also expected to visualize the data using Panda packages, Bokeh and SQL alchemy to display an object-oriented design with an inheritance.
-Furthermore, a standard and user-defined exception handling as well as "docstrings" should be applied as well, before unit tests are written for the elements. The implementation itself is explained in chapter 5 and 6.
+The implementation itself is explained in chapter 5 and 6.
 
-# Unit 5 explains how to run the code
+# Running the code
 
 1. Create a virtual environment with
 
