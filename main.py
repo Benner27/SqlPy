@@ -6,7 +6,7 @@ from function import FunctionManager, FunctionManagerIterator
 from regression import minimise_loss, find_classification
 from plotting import plot_ideal_functions, plot_points_with_their_ideal_function
 
-train_data_path = 'data/train_datasetsPyy.csv'
+train_data_path = 'data/train_datasetsPy.csv'
 ideal_funcs_path = 'data/ideal_datasetsPy.csv'
 
 # Constant criterion assignment factor
