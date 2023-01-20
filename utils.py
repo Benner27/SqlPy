@@ -1,9 +1,11 @@
 import csv
 import time
-from models import Mapping
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from db import Base, Session, engine
+from sqlalchemy.orm import sessionmaker
+
+from models import Mapping
+from db import Base, engine, Session
 
 
 class Utils:
@@ -13,8 +15,8 @@ class Utils:
     @staticmethod
     def read(csv_file, database_model):
         """ List of database objects are returned after reading CSV file
-        :csv_file: steps to peruse CSV file
-        :database_model: inhabits findings on the list. """
+        :csv_file (str): steps to peruse CSV file
+        :database_model (Type[Base]): inhabits findings on the list. """
 
         with open(f'{csv_file}', newline='') as file:
             filereader = csv.DictReader(file)
@@ -29,7 +31,8 @@ class Utils:
     @staticmethod
     def write_deviation_results_to_db(results):
         """ Communicates calculated classification findings on to SQLite database according to stipulations given,
-        :param results: a list with a dict describing the result of a classification test. """
+        :param:
+        results(List[Dict]): a list with a dict describing the result of a classification test. """
         execute_map = []
 
         for item in results:
@@ -52,7 +55,8 @@ class Utils:
 
             obj = Mapping(**current_mapping)
             execute_map.append(obj)
-            local_session = Session(bind=engine)
+            session = sessionmaker(bind=engine)
+            local_session = session()
             local_session.add_all(execute_map)
             local_session.commit()
 
@@ -62,14 +66,13 @@ class DBUtils:
     def create_db():
         """ Establishes a well-equipped SQLite database file. """
         from models import IdeaFunction, TrainingData, Mapping
-        print("Database established")
         Base.metadata.create_all(bind=engine)
 
     @staticmethod
     def populate_db(csv_file, db_model):
         """ A model of array objects inhabits the SQLite database
-        :csv_file: Steps to CSV file
-        :db_model: Objects are retrieved from model and kept in database. """
+        :csv_file (str): Steps to CSV file
+        :db_model (Type[Base]): Objects are retrieved from model and kept in database. """
         data = Utils.read(csv_file, db_model)
         print(f"Found {len(data)} columns in {csv_file}")
         time.sleep(1)
@@ -78,7 +81,9 @@ class DBUtils:
 
     @staticmethod
     def load_into_db(data):
-        """ SQLite database is populated with array of model objects. """
-        local_session = Session(bind=engine)
+        """ SQLite database is populated with array of model objects. 
+        param:  data (List[Base]): oblects list to be uploaded"""
+        session = sessionmaker(bind=engine)
+        local_session = session()
         local_session.add_all(data)
         local_session.commit()
