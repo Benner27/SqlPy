@@ -3,46 +3,45 @@ from function import IdealFunction
 
 def minimise_loss(training_function, loss_function, list_of_candidate_functions):
     """ IdealFunction established on a training function and a list of ideal functions
-    :param training_function: training function
-    :param loss_function: utilizes error minimization
-    :param list_of_candidate_functions: Ideal functions list
-    :return: a IdealFunction object. """
-    function_with_least_error = None
+    :param training_fn: training function
+    :param error_fn: utilizes error minimization
+    :param candidate_fn_list: Ideal functions list
+    :return: a IdealFunction object with least error. """
+    best_fit = None
     least_error = None
-    for function in list_of_candidate_functions:
-        error = loss_function(training_function, function)
-        if (least_error == None) or error < least_error:
-            least_error = error
-            function_with_least_error = function
+    for fn in candidate_fn_list:
+        current_error = error_fn(training_fn, fn)
+        if (lowest_error == None) or current_error < lowest_error:
+            lowest_error = current_error
+            best_fit = fn
 
-    ideal_function = IdealFunction(function=function_with_least_error, training_function=training_function,
-                                   error=error)
+    ideal_function = IdealFunction(function=best_fit, training_function=training_fn,
+                                   error=lowest_error)
     return ideal_function
 
 
-def find_classification(point, ideal_functions):
-    """ Points within the tolerance of a classification to lead to computation
-    :param ideal_functions: list of IdealFunction objects
+def classify_point(point, ideal_fn_list):
+    """ Points within the Ideal objects and their tolerance of a closest classification to lead to computation
+    :param ideal_fn_list: list of IdealFunction objects
     :param point: Contain an "x" dict object and a "y" dict object
     :return:Comprises a tuple encompassing min available closest classification and the distance. """
-    current_lowest_classification = None
-    current_lowest_distance = None
+    closest_classification = None
+    closest_distance = None
 
-    for ideal_function in ideal_functions:
+    for fn in ideal_fn_list:
         try:
-            locate_y_in_classification = ideal_function.locate_y_based_on_x(point["x"])
+            y_value = fn.locate_y_based_on_x(point["x"])
         except IndexError:
             print("Classification function does not represent this point")
             raise IndexError
 
-        # Perceives absolute distance utilization
-        distance = abs(locate_y_in_classification - point["y"])
+        distance = abs(y_value - point["y"])
 
         # Operates several classifications to return the least distance
-        if abs(distance < ideal_function.tolerance):
+        if abs(distance) < fn.tolerance:
+            if closest_classification == None or distance < closest_distance:
+                closest_classification = fn
+                closest_distance = distance
 
-            if ((current_lowest_classification == None) or (distance < current_lowest_distance)):
-                current_lowest_classification = ideal_function
-                current_lowest_distance = distance
+     return closest_classification, closest_distance
 
-    return current_lowest_classification, current_lowest_distance
