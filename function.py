@@ -5,45 +5,39 @@ from sqlalchemy import create_engine
 class FunctionManager:
 
     def __init__(self, path_of_csv):
-        """ Iterates over object, analyses CSV file (all columns contain y- values except first column
-        that has x-values) into a list of returned Functions restored through .functions property.
-        param path_of_csv: local path of the csv. """
+        """ Reads a CSV file and creates a list of Function objects.
+        :param csv_path: local path of the CSV file
+        """
         self._functions = []
-
-        # Scans Csv file using Panda module and changes into a dataframe
         try:
-            self._function_data = pd.read_csv(path_of_csv)
+            self._function_data = pd.read_csv(csv_path)
         except FileNotFoundError:
-            print("Complications reading file {}".format(path_of_csv))
+            print(f"Error reading file {csv_path}")
             raise
 
-        # Storage of x values and loaded into each Function
         x_values = self._function_data["x"]
-
-        # Contemporary Function object is established as Panda dataframe iterates over independent columns.
-        # Y column is developed, and Concat function is then used to combine x and y columns
-        for name_of_column, data_of_column in self._function_data.items():
-            if "x" in name_of_column:
+        for column_name, column_data in self._function_data.items():
+            if column_name == "x":
                 continue
-            subset = pd.concat([x_values, data_of_column], axis=1)
-            function = Function.from_dataframe(name_of_column, subset)
+            subset = pd.concat([x_values, column_data], axis=1)
+            function = Function.from_dataframe(column_name, subset)
             self._functions.append(function)
 
     @property
     def functions(self):
-        """ Produces a list of all functions that user utilizes to iterate over object.
-        :rtype: object. """
+        """ Returns a list of all functions.
+        """
         return self._functions
 
     def __iter__(self):
-        """ Iterates over the object."""
+        """ Returns iterator over the object."""
         return FunctionManagerIterator(self)
 
     def __repr__(self):
-        return "Holds {} different functions".format(len(self.functions))
+        return f"Holds {len(self.functions)} different functions"
 
 
-class FunctionManagerIterator():
+class FunctionManagerIterator:
 
     def __init__(self, function_manager):
         """ Iterates over a FunctionManager
@@ -52,23 +46,18 @@ class FunctionManagerIterator():
         self._function_manager = function_manager
 
     def __next__(self):
-        """ Iteration over list of functions produces function object
-        :rtype: function. """
+        """ Returns the next function in the list.
+        """
         if self._index < len(self._function_manager.functions):
             value_requested = self._function_manager.functions[self._index]
-            self._index = self._index + 1
+            self._index = self._index += 1
             return value_requested
         raise StopIteration
 
 
 class Function:
-
     def __init__(self, name):
-        """ Stores retrievable names and the X and Y values of a function.
-        i) Utilizes Panda dataframe and eases regression calculations
-        ii) Iterates and returns points symbolized as dict
-        iii) Fetches Y-Value by providing an X-Value
-        iv) Returns dataframe with the deviation by subtracting two functions
+        """ Initialize a new Function object with the given name.
         :param name: the function name. """
         self._name = name
         self.dataframe = pd.DataFrame()
@@ -109,8 +98,31 @@ class Function:
 
     def __repr__(self):
         return "Function for {}".format(self.name)
+    
 
+class FunctionIterator:
+    def __init__(self, function):
+        """
+        Initialize a new FunctionIterator object for the given function.
+        :param function: the function to iterate over.
+        """
+        self._function = function
+        self._index = 0
 
+    def __next__(self):
+        """
+        Get the next point of the function.
+
+        :returns: a dictionary containing the x and y values of the current point.
+        :raises: StopIteration if the end of the function has been reached.
+        """
+        if self._index < len(self._function.dataframe):
+            point_series = self._function.dataframe.iloc[self._index]
+            point = {"x": point_series.x, "y": point_series.y}
+            self._index += 1
+            return point
+        raise StopIteration
+        
 class IdealFunction(Function):
     def __init__(self, function, training_function, error):
         """ An ideal function deposits predicting function, training data and the regression.
@@ -161,19 +173,3 @@ class IdealFunction(Function):
         tremendous_deviation = self._determine_tremendous_deviation(self, self.training_function)
         return tremendous_deviation
 
-
-class FunctionIterator:
-
-    def __init__(self, function):
-        """ Returns a dict which explains the point after iterating over a function"""
-        self._function = function
-        self._index = 0
-
-    def __next__(self):
-        """ Returns a dict describing the point after iterating over a function"""
-        if self._index < len(self._function.dataframe):
-            value_requested_series = (self._function.dataframe.iloc[self._index])
-            point = {"x": value_requested_series.x, "y": value_requested_series.y}
-            self._index += 1
-            return point
-        raise StopIteration
